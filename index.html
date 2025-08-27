@@ -40,14 +40,18 @@
         document.getElementById("s" + i).textContent = symbols[rand];
       }
 
+      // Cooldown in ms
+      let cooldown = 250; // normaler Spin
+
       // Jackpot? (alle 3 gleich)
       if (results[0] === results[1] && results[1] === results[2]) {
         audio.currentTime = 0;
         audio.play();
+        cooldown = 750; // längerer Cooldown bei Jackpot
       }
 
-      // Cooldown: 0,25s bevor man wieder drehen kann
-      setTimeout(() => { spinning = false; }, 250);
+      // Cooldown
+      setTimeout(() => { spinning = false; }, cooldown);
     }
 
     // Button klicken
@@ -55,13 +59,13 @@
 
     // Touch / Klick irgendwo auf die Seite
     document.body.addEventListener("click", function(e) {
-      if (e.target !== spinBtn) spin(); // Button klick wird bereits separat behandelt
+      if (e.target !== spinBtn) spin(); // Button klick wird separat behandelt
     });
 
     // Leertaste auf physischer Tastatur
     document.addEventListener("keyup", function(e) {
       if (e.code === "Space" || e.key === " " || e.key === "Spacebar") {
-        e.preventDefault(); // verhindert Scrollen
+        e.preventDefault();
         spin();
       }
     });
