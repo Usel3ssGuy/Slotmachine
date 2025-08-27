@@ -36,15 +36,18 @@ function spin() {
         document.getElementById("s"+i).textContent = symbols[rand];
     }
 
-    console.log(results); // zum Debuggen, z.B. 3×7️⃣
+    console.log(results); // Debuggen, z.B. 3×7️⃣
 
     // Jackpot prüfen
     let isJackpot = (results[0] === results[1] && results[1] === results[2]);
 
-    // Sound abspielen, falls Jackpot
+    // Sound + Auto-Reload bei Jackpot
     if(isJackpot){
         const jackpotAudio = new Audio("SlotmachineSound.mp3");
         jackpotAudio.play().catch(err => console.log("Audio Fehler:", err));
+
+        // 3 Sekunden nach Jackpot reload
+        setTimeout(() => { location.reload(); }, 3000);
     }
 
     // Cooldown: 0,25s normal, 1,5s bei Jackpot
