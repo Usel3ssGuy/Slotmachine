@@ -1,32 +1,21 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="utf-8">
   <title>Slotmachine</title>
   <style>
-    body {
-      font-family: sans-serif;
-      text-align: center;
-      margin-top: 50px;
-      background: #222;
-      color: white;
+    body { font-family: sans-serif; text-align:center; margin-top:50px; background:#222; color:#fff; }
+    .slot { font-size:80px; margin:20px; display:inline-block; width:120px; height:120px; border:5px solid #fff; border-radius:10px; line-height:120px; background:#444; }
+    button { margin-top:30px; font-size:24px; padding:10px 20px; }
+    #message {
+      display: none;
+      margin-top: 20px;
+      padding: 10px;
+      border-radius: 5px;
+      font-weight: bold;
     }
-    .slot {
-      font-size: 80px;
-      margin: 20px;
-      display: inline-block;
-      width: 120px;
-      height: 120px;
-      border: 5px solid #fff;
-      border-radius: 10px;
-      line-height: 120px;
-      background: #444;
-    }
-    button {
-      margin-top: 30px;
-      font-size: 24px;
-      padding: 10px 20px;
-    }
+    #message.error { background: #a00; color: #fff; }
+    #message.success { background: #0a0; color: #fff; }
   </style>
 </head>
 <body>
@@ -37,29 +26,57 @@
     <div class="slot" id="s3">?</div>
   </div>
   <br>
-  <button onclick="spin()">Drehen!</button>
+  <button id="spinBtn">Drehen!</button>
 
-  <!-- Audio für Jackpot -->
+  <!-- Nachrichtenfeld -->
+  <div id="message"></div>
+
+  <!-- Audio-Datei im gleichen Ordner: SlotmachineSound.mp3 -->
   <audio id="SlotmachineSound" src="SlotmachineSound.mp3" preload="auto"></audio>
 
   <script>
-    // Symbole
-    const symbols = ["🍒", "🍋", "🥒", "🍉", "7️⃣"];
+    const symbols = ["🍒","🍋","🥒","🍉","7️⃣"];
+    const audio = document.getElementById("SlotmachineSound");
+    const spinBtn = document.getElementById("spinBtn");
+    const messageBox = document.getElementById("message");
 
-    function spin() {
+    spinBtn.addEventListener("click", spin);
+
+    function showMessage(text, type="success", duration=2000) {
+      messageBox.textContent = text;
+      messageBox.className = type === "error" ? "error" : "success";
+      messageBox.style.display = "block";
+      setTimeout(() => { messageBox.style.display = "none"; }, duration);
+    }
+
+    function spin(){
+      spinBtn.disabled = true;
+
       let results = [];
-      for (let i = 1; i <= 3; i++) {
-        let rand = Math.floor(Math.random() * symbols.length);
+      for (let i = 1; i <= 3; i++){
+        const rand = Math.floor(Math.random() * symbols.length);
         results.push(symbols[rand]);
         document.getElementById("s" + i).textContent = symbols[rand];
       }
 
       // Jackpot? (alle 3 gleich)
       if (results[0] === results[1] && results[1] === results[2]) {
-        const audio = document.getElementById("SlotmachineSound");
-        audio.currentTime = 0; // Sound von Anfang abspielen
-        audio.play();
+        audio.currentTime = 0;
+        const p = audio.play();
+        if (p !== undefined) {
+          p.then(() => {
+            // Sound läuft
+            showMessage("JACKPOT! 🎉", "success");
+          }).catch(err => {
+            // Fehler beim Abspielen
+            showMessage("⚠️ Sound konnte nicht abgespielt werden!", "error");
+            console.error("Audio konnte nicht abgespielt werden:", err);
+          });
+        }
       }
+
+      // Pause (hier: 0.25 Sekunden)
+      setTimeout(()=> spinBtn.disabled = false, 250);
     }
   </script>
 </body>
