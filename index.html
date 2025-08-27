@@ -39,14 +39,25 @@
   <br>
   <button onclick="spin()">Drehen!</button>
 
+  <!-- Audio für Jackpot -->
+  <audio id="jackpotSound" src="jackpot.mp3" preload="auto"></audio>
+
   <script>
     // Symbole
-    const symbols = ["🍒", "🍋", "🥒", "⭐", "7️⃣"];
+    const symbols = ["🍒", "🍋", "🥒", "🍉", "7️⃣"];
 
     function spin() {
+      let results = [];
       for (let i = 1; i <= 3; i++) {
         let rand = Math.floor(Math.random() * symbols.length);
+        results.push(symbols[rand]);
         document.getElementById("s" + i).textContent = symbols[rand];
+      }
+
+      // Check auf Jackpot (alle 3 gleich)
+      if (results[0] === results[1] && results[1] === results[2]) {
+        document.getElementById("jackpotSound").play();
+        alert("JACKPOT! 🎉");
       }
     }
   </script>
