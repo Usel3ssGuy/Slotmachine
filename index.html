@@ -29,7 +29,16 @@
 
     let spinning = false; // Flag, damit kein mehrfaches Drehen
 
+    // Button klicken
     spinBtn.addEventListener("click", spin);
+
+    // Leertaste drücken
+    document.addEventListener("keydown", function(e) {
+      if (e.code === "Space") {  // Leertaste
+        e.preventDefault();       // Scrollen verhindern
+        spin();
+      }
+    });
 
     function spin(){
       if (spinning) return; // schon am Drehen → ignorieren
