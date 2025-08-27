@@ -38,19 +38,26 @@ function spin() {
         document.getElementById("s"+i).textContent = symbols[rand];
     }
 
-    console.log(results); // hilft debuggen, z.B. für 7️⃣
+    console.log(results);
 
     // Jackpot prüfen
     let isJackpot = (results[0] === results[1] && results[1] === results[2]);
 
     // Sound abspielen, falls Jackpot
     if(isJackpot){
-        audio.currentTime = 0;
-        audio.play();
+        audio.pause();           // stoppen, falls noch läuft
+        audio.currentTime = 0;   // auf Anfang setzen
+        const p = audio.play();  // wieder abspielen
+        if (p !== undefined) {
+            p.catch(err => {
+                // Play wurde blockiert, ignorieren
+                console.log("Audio konnte nicht abgespielt werden:", err);
+            });
+        }
     }
 
-    // Cooldown sofort starten
-    let cooldown = isJackpot ? 750 : 250;
+    // Cooldown: 0,25s normal, 1,5s bei Jackpot
+    let cooldown = isJackpot ? 1500 : 250;
     setTimeout(()=>{ spinning = false; }, cooldown);
 }
 
