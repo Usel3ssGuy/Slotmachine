@@ -19,18 +19,16 @@
   <br>
   <button id="spinBtn">Drehen!</button>
 
-  <!-- Audio-Datei im gleichen Ordner: SlotmachineSound.mp3 -->
   <audio id="SlotmachineSound" src="SlotmachineSound.mp3" preload="auto"></audio>
 
   <script>
     const symbols = ["🍒","🍋","🥒","🍉","7️⃣"];
     const audio = document.getElementById("SlotmachineSound");
     const spinBtn = document.getElementById("spinBtn");
-
-    let spinning = false; // Flag, damit kein mehrfaches Drehen
+    let spinning = false;
 
     function spin() {
-      if (spinning) return; // gerade am Drehen → ignorieren
+      if (spinning) return;
       spinning = true;
 
       let results = [];
@@ -40,18 +38,20 @@
         document.getElementById("s" + i).textContent = symbols[rand];
       }
 
-      // Cooldown in ms
-      let cooldown = 250; // normaler Spin
+      // Standard Cooldown
+      let cooldown = 250;
 
-      // Jackpot? (alle 3 gleich)
+      // Jackpot
       if (results[0] === results[1] && results[1] === results[2]) {
         audio.currentTime = 0;
         audio.play();
         cooldown = 750; // längerer Cooldown bei Jackpot
       }
 
-      // Cooldown
-      setTimeout(() => { spinning = false; }, cooldown);
+      // Cooldown anwenden
+      setTimeout(() => {
+        spinning = false;
+      }, cooldown);
     }
 
     // Button klicken
@@ -59,7 +59,7 @@
 
     // Touch / Klick irgendwo auf die Seite
     document.body.addEventListener("click", function(e) {
-      if (e.target !== spinBtn) spin(); // Button klick wird separat behandelt
+      if (e.target !== spinBtn) spin();
     });
 
     // Leertaste auf physischer Tastatur
