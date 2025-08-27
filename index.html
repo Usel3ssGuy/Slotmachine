@@ -18,11 +18,9 @@ button { margin-top:30px; font-size:24px; padding:10px 20px; }
 </div>
 <br>
 <button id="spinBtn">Drehen!</button>
-<audio id="SlotmachineSound" src="SlotmachineSound.mp3" preload="auto"></audio>
 
 <script>
 const symbols = ["🍒","🍋","🥒","🍉","7️⃣"];
-const audio = document.getElementById("SlotmachineSound");
 const spinBtn = document.getElementById("spinBtn");
 let spinning = false;
 
@@ -38,38 +36,31 @@ function spin() {
         document.getElementById("s"+i).textContent = symbols[rand];
     }
 
-    console.log(results);
+    console.log(results); // zum Debuggen, z.B. 3×7️⃣
 
     // Jackpot prüfen
     let isJackpot = (results[0] === results[1] && results[1] === results[2]);
 
     // Sound abspielen, falls Jackpot
     if(isJackpot){
-        audio.pause();           // stoppen, falls noch läuft
-        audio.currentTime = 0;   // auf Anfang setzen
-        const p = audio.play();  // wieder abspielen
-        if (p !== undefined) {
-            p.catch(err => {
-                // Play wurde blockiert, ignorieren
-                console.log("Audio konnte nicht abgespielt werden:", err);
-            });
-        }
+        const jackpotAudio = new Audio("SlotmachineSound.mp3");
+        jackpotAudio.play().catch(err => console.log("Audio Fehler:", err));
     }
 
     // Cooldown: 0,25s normal, 1,5s bei Jackpot
-    let cooldown = isJackpot ? 2500 : 250;
+    let cooldown = isJackpot ? 1500 : 250;
     setTimeout(()=>{ spinning = false; }, cooldown);
 }
 
-// Button
+// Button klicken
 spinBtn.addEventListener("click", spin);
 
-// Touch / Klick
+// Touch / Klick irgendwo auf die Seite
 document.body.addEventListener("click", function(e){
     if(e.target !== spinBtn) spin();
 });
 
-// Leertaste
+// Leertaste auf physischer Tastatur
 document.addEventListener("keyup", function(e){
     if(e.code==="Space" || e.key===" " || e.key==="Spacebar"){
         e.preventDefault();
