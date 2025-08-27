@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>Slotmachine</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      text-align: center;
+      margin-top: 50px;
+      background: #222;
+      color: white;
+    }
+    .slot {
+      font-size: 80px;
+      margin: 20px;
+      display: inline-block;
+      width: 120px;
+      height: 120px;
+      border: 5px solid #fff;
+      border-radius: 10px;
+      line-height: 120px;
+      background: #444;
+    }
+    button {
+      margin-top: 30px;
+      font-size: 24px;
+      padding: 10px 20px;
+    }
+  </style>
+</head>
+<body>
+  <h1>🎰 Slotmachine 🎰</h1>
+  <div id="slots">
+    <div class="slot" id="s1">?</div>
+    <div class="slot" id="s2">?</div>
+    <div class="slot" id="s3">?</div>
+  </div>
+  <br>
+  <button onclick="spin()">Drehen!</button>
+
+  <script>
+    // Symbole
+    const symbols = ["🍒", "🍋", "🥒", "⭐", "7️⃣"];
+
+    function spin() {
+      for (let i = 1; i <= 3; i++) {
+        let rand = Math.floor(Math.random() * symbols.length);
+        document.getElementById("s" + i).textContent = symbols[rand];
+      }
+    }
+  </script>
+</body>
+</html>
