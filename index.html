@@ -1,74 +1,74 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-  <meta charset="utf-8">
-  <title>Slotmachine</title>
-  <style>
-    body { font-family: sans-serif; text-align:center; margin-top:50px; background:#222; color:#fff; }
-    .slot { font-size:80px; margin:20px; display:inline-block; width:120px; height:120px; border:5px solid #fff; border-radius:10px; line-height:120px; background:#444; }
-    button { margin-top:30px; font-size:24px; padding:10px 20px; }
-  </style>
+<meta charset="utf-8">
+<title>Slotmachine</title>
+<style>
+body { font-family:sans-serif; text-align:center; margin-top:50px; background:#222; color:#fff; }
+.slot { font-size:80px; margin:20px; display:inline-block; width:120px; height:120px; border:5px solid #fff; border-radius:10px; line-height:120px; background:#444; }
+button { margin-top:30px; font-size:24px; padding:10px 20px; }
+</style>
 </head>
 <body>
-  <h1>🎰 Slotmachine 🎰</h1>
-  <div id="slots">
-    <div class="slot" id="s1">?</div>
-    <div class="slot" id="s2">?</div>
-    <div class="slot" id="s3">?</div>
-  </div>
-  <br>
-  <button id="spinBtn">Drehen!</button>
+<h1>🎰 Slotmachine 🎰</h1>
+<div id="slots">
+<div class="slot" id="s1">?</div>
+<div class="slot" id="s2">?</div>
+<div class="slot" id="s3">?</div>
+</div>
+<br>
+<button id="spinBtn">Drehen!</button>
+<audio id="SlotmachineSound" src="SlotmachineSound.mp3" preload="auto"></audio>
 
-  <audio id="SlotmachineSound" src="SlotmachineSound.mp3" preload="auto"></audio>
+<script>
+const symbols = ["🍒","🍋","🥒","🍉","7️⃣"];
+const audio = document.getElementById("SlotmachineSound");
+const spinBtn = document.getElementById("spinBtn");
+let spinning = false;
 
-  <script>
-    const symbols = ["🍒","🍋","🥒","🍉","7️⃣"];
-    const audio = document.getElementById("SlotmachineSound");
-    const spinBtn = document.getElementById("spinBtn");
-    let spinning = false;
+function spin() {
+    if (spinning) return;
+    spinning = true;
 
-    function spin() {
-      if (spinning) return;
-      spinning = true;
-
-      let results = [];
-      for (let i = 1; i <= 3; i++){
+    // Zufallsergebnis
+    let results = [];
+    for (let i=1; i<=3; i++){
         const rand = Math.floor(Math.random() * symbols.length);
         results.push(symbols[rand]);
-        document.getElementById("s" + i).textContent = symbols[rand];
-      }
-
-      // Standard Cooldown
-      let cooldown = 250;
-
-      // Jackpot
-      if (results[0] === results[1] && results[1] === results[2]) {
-        audio.currentTime = 0;
-        audio.play();
-        cooldown = 750; // längerer Cooldown bei Jackpot
-      }
-
-      // Cooldown anwenden
-      setTimeout(() => {
-        spinning = false;
-      }, cooldown);
+        document.getElementById("s"+i).textContent = symbols[rand];
     }
 
-    // Button klicken
-    spinBtn.addEventListener("click", spin);
+    console.log(results); // hilft debuggen, z.B. für 7️⃣
 
-    // Touch / Klick irgendwo auf die Seite
-    document.body.addEventListener("click", function(e) {
-      if (e.target !== spinBtn) spin();
-    });
+    // Jackpot prüfen
+    let isJackpot = (results[0] === results[1] && results[1] === results[2]);
 
-    // Leertaste auf physischer Tastatur
-    document.addEventListener("keyup", function(e) {
-      if (e.code === "Space" || e.key === " " || e.key === "Spacebar") {
+    // Sound abspielen, falls Jackpot
+    if(isJackpot){
+        audio.currentTime = 0;
+        audio.play();
+    }
+
+    // Cooldown sofort starten
+    let cooldown = isJackpot ? 750 : 250;
+    setTimeout(()=>{ spinning = false; }, cooldown);
+}
+
+// Button
+spinBtn.addEventListener("click", spin);
+
+// Touch / Klick
+document.body.addEventListener("click", function(e){
+    if(e.target !== spinBtn) spin();
+});
+
+// Leertaste
+document.addEventListener("keyup", function(e){
+    if(e.code==="Space" || e.key===" " || e.key==="Spacebar"){
         e.preventDefault();
         spin();
-      }
-    });
-  </script>
+    }
+});
+</script>
 </body>
 </html>
