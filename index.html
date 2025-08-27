@@ -54,10 +54,11 @@
         document.getElementById("s" + i).textContent = symbols[rand];
       }
 
-      // Check auf Jackpot (alle 3 gleich)
+      // Jackpot? (alle 3 gleich)
       if (results[0] === results[1] && results[1] === results[2]) {
-        document.getElementById("SlotmachineSound").play();
-        alert("JACKPOT! 🎉");
+        const audio = document.getElementById("jackpotSound");
+        audio.currentTime = 0; // Sound von Anfang abspielen
+        audio.play();
       }
     }
   </script>
