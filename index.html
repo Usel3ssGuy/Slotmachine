@@ -29,19 +29,8 @@
 
     let spinning = false; // Flag, damit kein mehrfaches Drehen
 
-    // Button klicken
-    spinBtn.addEventListener("click", spin);
-
-    // Leertaste drücken
-    document.addEventListener("keydown", function(e) {
-      if (e.code === "Space") {  // Leertaste
-        e.preventDefault();       // Scrollen verhindern
-        spin();
-      }
-    });
-
-    function spin(){
-      if (spinning) return; // schon am Drehen → ignorieren
+    function spin() {
+      if (spinning) return; // gerade am Drehen → ignorieren
       spinning = true;
 
       let results = [];
@@ -57,9 +46,25 @@
         audio.play();
       }
 
-      // Cooldown / kurze Pause bevor man wieder drehen kann
-      setTimeout(() => { spinning = false; }, 250); // 0,25s
+      // Cooldown: 0,25s bevor man wieder drehen kann
+      setTimeout(() => { spinning = false; }, 250);
     }
+
+    // Button klicken
+    spinBtn.addEventListener("click", spin);
+
+    // Touch / Klick irgendwo auf die Seite
+    document.body.addEventListener("click", function(e) {
+      if (e.target !== spinBtn) spin(); // Button klick wird bereits separat behandelt
+    });
+
+    // Leertaste auf physischer Tastatur
+    document.addEventListener("keyup", function(e) {
+      if (e.code === "Space" || e.key === " " || e.key === "Spacebar") {
+        e.preventDefault(); // verhindert Scrollen
+        spin();
+      }
+    });
   </script>
 </body>
 </html>
