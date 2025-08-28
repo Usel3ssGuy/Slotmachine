@@ -12,9 +12,7 @@ button { margin-top:30px; font-size:24px; padding:10px 20px; }
 <body>
 <h1>🎰 Slotmachine 🎰</h1>
 <div id="slots">
-<div class="slot" id="s1">?</div>
-<div class="slot" id="s2">?</div>
-<div class="slot" id="s3">?</div>
+  <div class="slot" id="s1">?</div>
 </div>
 <br>
 <button id="spinBtn">Drehen!</button>
@@ -28,31 +26,12 @@ function spin() {
     if (spinning) return;
     spinning = true;
 
-    // Zufallsergebnis
-    let results = [];
-    for (let i=1; i<=3; i++){
-        const rand = Math.floor(Math.random() * symbols.length);
-        results.push(symbols[rand]);
-        document.getElementById("s"+i).textContent = symbols[rand];
-    }
+    // Zufälliges Symbol auswählen
+    const rand = Math.floor(Math.random() * symbols.length);
+    document.getElementById("s1").textContent = symbols[rand];
 
-    console.log(results); // Debuggen, z.B. 3×7️⃣
-
-    // Jackpot prüfen
-    let isJackpot = (results[0] === results[1] && results[1] === results[2]);
-
-    // Sound + Auto-Reload bei Jackpot
-    if(isJackpot){
-        const jackpotAudio = new Audio("SlotmachineSound.mp3");
-        jackpotAudio.play().catch(err => console.log("Audio Fehler:", err));
-
-        // 3 Sekunden nach Jackpot reload
-        setTimeout(() => { location.reload(); }, 3000);
-    }
-
-    // Cooldown: 0,25s normal, 1,5s bei Jackpot
-    let cooldown = isJackpot ? 1500 : 250;
-    setTimeout(()=>{ spinning = false; }, cooldown);
+    // kurzer Cooldown (0,25s)
+    setTimeout(()=>{ spinning = false; }, 250);
 }
 
 // Button klicken
